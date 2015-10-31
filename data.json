@@ -1,0 +1,9 @@
+{
+    "seb": [
+        { "year": 0, "percentage": 1.0 },
+        { "year": 1, "percentage": 1.2 },
+        { "year": 2, "percentage": 1.6 },
+        { "year": 3, "percentage": 2.4 },
+        { "year": 4, "percentage": 3.0 }
+    ]
+}
