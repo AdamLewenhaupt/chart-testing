@@ -2,5 +2,15 @@
 }
 
 .point {
-    fill: green;
+    fill: #00CCD6;
+}
+
+.point.dragging {
+    fill: #FFD900;
+}
+
+.line {
+    fill: none;
+    stroke: #00CCD6;
+    stroke-width: 4px;
 }

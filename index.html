@@ -1,5 +1,7 @@
 <html>
     <head>
+        <meta charset="utf-8">
+        <link href="./bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="main.css" rel="stylesheet">
         <script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
         <script src="./bower_components/d3/d3.min.js" type="text/javascript"></script>
@@ -7,9 +9,15 @@
         <script src="lib/main.js" type="text/javascript"></script>
     </head>
     <body>
-        <div id="container">
-            <div class="jumbotron"></div>
-            <svg width="1000" id="visualisation" height="500"></svg>
+        <div class="graph">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1000" id="visualisation" height="600">
+                <defs>
+                    <pattern patternContentUnits="objectBoundingBox" id="bars" x="0" y="0" width="1.0" height="0.2">
+                        <rect x="0" y="0" width="1" height="0.1" fill="#333333" />
+                        <rect x="0" y="0.1" width="1" height="0.1" fill="#424242" />
+                    </pattern>
+                </defs>
+            </svg>
         </div>
     </body>
 </html>

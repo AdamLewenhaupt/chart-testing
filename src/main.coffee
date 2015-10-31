@@ -12,19 +12,29 @@ $ ->
             min = _.min [_.min(values), min]
 
         vis = d3.select('#visualisation')
-        WIDTH = 1000
-        HEIGHT = 500
+        WIDTH = vis.attr("width")
+        HEIGHT = vis.attr("height") - 20
         MARGINS = 
             top: 20
             right: 20
             bottom: 20
             left: 50
 
-        xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right - MARGINS.left]).domain([0,4])
-        yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([min, max])
+        xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,5])
+        yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, 5])
 
-        xAxis = d3.svg.axis().scale(xScale)
+        xAxis = d3.svg.axis().scale(xScale).innerTickSize(20).ticks(6).tickFormat (d) -> 
+            if d == 0 then "Nu" else "År #{d}"
+
         yAxis = d3.svg.axis().scale(yScale).orient('left')
+
+        vis.append("svg:rect")
+            .attr "width", WIDTH - (MARGINS.left + MARGINS.right)
+            .attr "height", HEIGHT - (MARGINS.top + MARGINS.bottom)
+            .attr "x", MARGINS.left
+            .attr "y", MARGINS.top
+            .attr "fill", "url(#bars)"
+            .on "mousedown", () -> false
 
         vis.append("svg:g")
             .attr("transform", "translate(0,#{HEIGHT - MARGINS.bottom})") .call(xAxis)
@@ -40,9 +50,7 @@ $ ->
 
         line = vis.append("svg:path")
             .attr 'd', lineGen(information["seb"])
-            .attr 'stroke', 'green'
-            .attr 'stroke-width', 2
-            .attr 'fill', 'none'
+            .classed 'line', true
 
         drag = d3.behavior.drag()
             .on "dragstart", (d) -> 
@@ -69,5 +77,5 @@ $ ->
             .attr 'index', (d) -> information['seb'].indexOf(d)
             .classed "point", true
             .attr 'bank', "seb"
-            .attr "r", 5
+            .attr "r", 8
             .call(drag)
