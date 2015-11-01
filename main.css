@@ -1,4 +1,5 @@
-#container {
+body {
+    text-align: center; 
 }
 
 .point {
@@ -13,4 +14,20 @@
     fill: none;
     stroke: #00CCD6;
     stroke-width: 4px;
+}
+
+.axis path { 
+    /* fill: #333333; */
+    fill: none;
+}
+
+.graph, body {
+    background-color: #EFEFEF;
+}
+
+.graph {
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px #424242;
+    display: inline-block;
+    padding: 20px;
 }

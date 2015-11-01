@@ -20,13 +20,16 @@ $ ->
             bottom: 20
             left: 50
 
+        precisionFormat = d3.format(".1f")
+
         xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,5])
         yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, 5])
 
-        xAxis = d3.svg.axis().scale(xScale).innerTickSize(20).ticks(6).tickFormat (d) -> 
+        xAxis = d3.svg.axis().scale(xScale).innerTickSize(10).ticks(6).tickFormat (d) -> 
             if d == 0 then "Nu" else "År #{d}"
 
-        yAxis = d3.svg.axis().scale(yScale).orient('left')
+        yAxis = d3.svg.axis().scale(yScale).orient('left').innerTickSize(10)
+            .tickFormat (d) -> "#{precisionFormat d}%"
 
         vis.append("svg:rect")
             .attr "width", WIDTH - (MARGINS.left + MARGINS.right)
@@ -38,10 +41,12 @@ $ ->
 
         vis.append("svg:g")
             .attr("transform", "translate(0,#{HEIGHT - MARGINS.bottom})") .call(xAxis)
+            .classed "axis", true
 
         vis.append("svg:g")
             .attr("transform", "translate(#{ MARGINS.left }, 0)")
             .call(yAxis)
+            .classed "axis", true
 
         lineGen = d3.svg.line()
             .x (d) -> xScale(d.year)
