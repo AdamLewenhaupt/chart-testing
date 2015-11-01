@@ -6,7 +6,7 @@ body {
     fill: #00CCD6;
 }
 
-.point.dragging {
+.point.dragging, .point:hover {
     fill: #FFD900;
 }
 
