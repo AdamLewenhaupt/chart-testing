@@ -37,7 +37,12 @@ $ ->
             .attr "x", MARGINS.left
             .attr "y", MARGINS.top
             .attr "fill", "url(#bars)"
-            .on "mousedown", () -> false
+            .on "mousedown", () -> 
+                d3.event.preventDefault()
+                false
+            .on "mousemove", () ->
+                d3.event.preventDefault()
+                false
 
         vis.append("svg:g")
             .attr("transform", "translate(0,#{HEIGHT - MARGINS.bottom})") .call(xAxis)
