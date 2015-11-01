@@ -74,7 +74,7 @@ $ ->
             .on "dragend", (d) ->
                 d3.select(this).classed("dragging", false)
 
-        vis.selectAll('.dot')
+        vis.selectAll()
             .data information['seb']
             .enter().append('circle')
             .attr 'cx', (d) -> xScale(d.year)

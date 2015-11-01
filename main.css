@@ -26,6 +26,7 @@ body {
 }
 
 .graph {
+    margin-top: 10px;
     border-radius: 10px;
     box-shadow: 2px 2px 5px #424242;
     display: inline-block;
