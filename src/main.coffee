@@ -62,12 +62,15 @@ $ ->
                 d3.event.sourceEvent.stopPropagation()
                 d3.select(this).classed("dragging", true)
             .on "drag", (d) ->
+                inv = yScale.invert d3.event.y
                 dot = d3.select(this)
-                dot.attr 'cy', d3.event.y
-                bank = information[dot.attr("bank")]
-                bank[dot.attr("index")] = 
-                    year: dot.attr("index")
-                    percentage: yScale.invert d3.event.y
+                inBounds = 0 <= inv <= 5
+                if inBounds
+                    dot.attr 'cy', d3.event.y    
+                    bank = information[dot.attr("bank")]
+                    bank[dot.attr("index")] = 
+                        year: dot.attr("index")
+                        percentage: inv
 
                 line.attr 'd', lineGen(information["seb"])
 
