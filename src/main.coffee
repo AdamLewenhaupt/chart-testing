@@ -1,15 +1,8 @@
 $ ->
-    min = 10000
-    max = 0
-
 
     $.getJSON '/data.json', (data) ->
-        information = data
 
-        for k, range of information
-            values = _.pluck(bankInfo, "percentage")            
-            max = _.max [_.max(values), max]
-            min = _.min [_.min(values), min]
+        information = data.information
 
         vis = d3.select('#visualisation')
         WIDTH = vis.attr("width")
@@ -44,6 +37,7 @@ $ ->
                 d3.event.preventDefault()
                 false
 
+
         vis.append("svg:g")
             .attr("transform", "translate(0,#{HEIGHT - MARGINS.bottom})") .call(xAxis)
             .classed "axis", true
@@ -58,9 +52,6 @@ $ ->
             .y (d) -> yScale(d.percentage)
             .interpolate('cardinal')
 
-        line = vis.append("svg:path")
-            .attr 'd', lineGen(information["seb"])
-            .classed 'line', true
 
         drag = d3.behavior.drag()
             .on "dragstart", (d) -> 
@@ -82,13 +73,20 @@ $ ->
             .on "dragend", (d) ->
                 d3.select(this).classed("dragging", false)
 
-        vis.selectAll()
-            .data information['seb']
-            .enter().append('circle')
-            .attr 'cx', (d) -> xScale(d.year)
-            .attr 'cy', (d) -> yScale(d.percentage)
-            .attr 'index', (d) -> information['seb'].indexOf(d)
-            .classed "point", true
-            .attr 'bank', "seb"
-            .attr "r", 8
-            .call(drag)
+        for range in information
+
+            line = vis.append("svg:path")
+                .attr 'd', lineGen(range.prediction)
+                .classed 'line', true
+
+
+            vis.selectAll()
+                .data information['seb']
+                .enter().append('circle')
+                .attr 'cx', (d) -> xScale(d.year)
+                .attr 'cy', (d) -> yScale(d.percentage)
+                .attr 'index', (d) -> information['seb'].indexOf(d)
+                .classed "point", true
+                .attr 'bank', "seb"
+                .attr "r", 8
+                .call(drag)

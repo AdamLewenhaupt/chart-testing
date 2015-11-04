@@ -2,69 +2,69 @@
     "information": [
         {
             "range": 0, "prediction": [
-                { "range": 0, "percentage": 1.0 },
-                { "range": 1, "percentage": 1.2 },
-                { "range": 2, "percentage": 1.6 },
-                { "range": 3, "percentage": 2.4 },
-                { "range": 4, "percentage": 3.0 },
-                { "range": 5, "percentage": 3.5 },
-                { "range": 6, "percentage": 4.0 }
+                1.0,
+                1.2,
+                1.6,
+                2.4,
+                3.0,
+                3.5,
+                4.0
             ]
         },
 
         {
             "range": 1, "prediction": [
-                { "range": 0, "percentage": 1.2 },
-                { "range": 1, "percentage": 1.8 },
-                { "range": 2, "percentage": 1.6 },
-                { "range": 3, "percentage": 2.0 },
-                { "range": 4, "percentage": 3.2 },
-                { "range": 5, "percentage": 3.5 },
-                { "range": 6, "percentage": 4.5 }
+                1.2,
+                1.8,
+                1.6,
+                2.0,
+                3.2,
+                3.5,
+                4.5
             ]
         },
         {
             "range": 2, "prediction": [
-                { "range": 0, "percentage": 0.9 },
-                { "range": 1, "percentage": 1.3 },
-                { "range": 2, "percentage": 1.4 },
-                { "range": 3, "percentage": 1.5 },
-                { "range": 4, "percentage": 1.6 },
-                { "range": 5, "percentage": 1.8 },
-                { "range": 6, "percentage": 2.0 }
+                0.9,
+                1.3,
+                1.4,
+                1.5,
+                1.6,
+                1.8,
+                2.0
             ]
         },
         {
             "range": 3, "prediction": [
-                { "range": 0, "percentage": 1.5 },
-                { "range": 1, "percentage": 1.8 },
-                { "range": 2, "percentage": 2.4 },
-                { "range": 3, "percentage": 3.9 },
-                { "range": 4, "percentage": 4.2 },
-                { "range": 5, "percentage": 4.1 },
-                { "range": 6, "percentage": 4.0 }
+                1.5,
+                1.8,
+                2.4,
+                3.9,
+                4.2,
+                4.1,
+                4.0
             ]
         },
         {
             "range": 4, "prediction": [
-                { "range": 0, "percentage": 0.5 },
-                { "range": 1, "percentage": 1.2 },
-                { "range": 2, "percentage": 1.5 },
-                { "range": 3, "percentage": 1.7 },
-                { "range": 4, "percentage": 2.4 },
-                { "range": 5, "percentage": 2.8 },
-                { "range": 6, "percentage": 3.0 }
+                0.5,
+                1.2,
+                1.5,
+                1.7,
+                2.4,
+                2.8,
+                3.0
             ]
         },
         {
             "range": 5, "prediction": [
-                { "range": 0, "percentage": 2.0 },
-                { "range": 1, "percentage": 2.3 },
-                { "range": 2, "percentage": 2.8 },
-                { "range": 3, "percentage": 3.5 },
-                { "range": 4, "percentage": 3.6 },
-                { "range": 5, "percentage": 3.8 },
-                { "range": 6, "percentage": 3.7 }
+                2.0,
+                2.3,
+                2.8,
+                3.5,
+                3.6,
+                3.8,
+                3.7
             ]
         }
     ]
