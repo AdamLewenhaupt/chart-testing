@@ -6,7 +6,7 @@ $ ->
     $.getJSON '/data.json', (data) ->
         information = data
 
-        for k, bankInfo of information
+        for k, range of information
             values = _.pluck(bankInfo, "percentage")            
             max = _.max [_.max(values), max]
             min = _.min [_.min(values), min]
