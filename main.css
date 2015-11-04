@@ -2,17 +2,12 @@ body {
     text-align: center; 
 }
 
-.point {
-    fill: #00CCD6;
-}
-
 .point.dragging, .point:hover {
-    fill: #FFD900;
+    fill: #FFF;
 }
 
 .line {
     fill: none;
-    stroke: #00CCD6;
     stroke-width: 4px;
 }
 

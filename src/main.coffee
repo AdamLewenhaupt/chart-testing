@@ -1,5 +1,13 @@
-$ ->
+lineColors = [
+    "#00CCD6",
+    "#FFD900",
+    "#FB6648",
+    "#FF2321",
+    "#FF66CC",
+    "#83BF17"
+]
 
+$ ->
     $.getJSON '/data.json', (data) ->
 
         information = data.information
@@ -52,41 +60,50 @@ $ ->
             .y (d) -> yScale(d.percentage)
             .interpolate('cardinal')
 
-
         drag = d3.behavior.drag()
             .on "dragstart", (d) -> 
                 d3.event.sourceEvent.stopPropagation()
                 d3.select(this).classed("dragging", true)
+
             .on "drag", (d) ->
                 inv = yScale.invert d3.event.y
                 dot = d3.select(this)
                 inBounds = 0 <= inv <= 5
                 if inBounds
                     dot.attr 'cy', d3.event.y    
-                    bank = information[dot.attr("bank")]
-                    bank[dot.attr("index")] = 
+                    range = _.findWhere(information, { range: +dot.attr('range-index') })
+
+                    range.prediction[dot.attr("index")] = 
                         year: dot.attr("index")
                         percentage: inv
 
-                line.attr 'd', lineGen(information["seb"])
+                lines[dot.attr('range-index')].attr 'd', lineGen(range.prediction)
 
             .on "dragend", (d) ->
                 d3.select(this).classed("dragging", false)
 
+        lines = []
+        colorCounter = 0
+
         for range in information
 
-            line = vis.append("svg:path")
+
+            line =  vis.append("svg:path")
                 .attr 'd', lineGen(range.prediction)
                 .classed 'line', true
+                .attr 'stroke', lineColors[colorCounter]
+
+            lines.push line
 
 
             vis.selectAll()
-                .data information['seb']
+                .data range.prediction
                 .enter().append('circle')
                 .attr 'cx', (d) -> xScale(d.year)
                 .attr 'cy', (d) -> yScale(d.percentage)
-                .attr 'index', (d) -> information['seb'].indexOf(d)
+                .attr 'index', (d) -> range.prediction.indexOf(d)
                 .classed "point", true
-                .attr 'bank', "seb"
+                .attr 'range-index', range.range
                 .attr "r", 8
+                .attr 'fill', lineColors[colorCounter++]
                 .call(drag)
