@@ -87,7 +87,6 @@ $ ->
 
         for range in information
 
-
             line =  vis.append("svg:path")
                 .attr 'd', lineGen(range.prediction)
                 .classed 'line', true
@@ -107,3 +106,18 @@ $ ->
                 .attr "r", 8
                 .attr 'fill', lineColors[colorCounter++]
                 .call(drag)
+
+        headerItems = d3.select(".graph-header")
+            .selectAll()
+            .data(information)
+            .enter()
+            .append('div')
+                .classed 'graph-header-item', true
+
+        headerItems.append('div')
+                .classed 'graph-header-btn', true
+                .style "background-color": (d) -> lineColors[d.range]
+
+        headerItems.append('p')
+                .classed 'graph-header-text', true
+                .text (d) -> if d.range == 0 then "3 Månader" else "#{d.range} År"

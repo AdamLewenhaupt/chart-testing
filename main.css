@@ -4,6 +4,7 @@ body {
 
 .point.dragging, .point:hover {
     fill: #FFF;
+    cursor: move;
 }
 
 .line {
@@ -26,4 +27,26 @@ body {
     box-shadow: 2px 2px 5px #424242;
     display: inline-block;
     padding: 20px;
+}
+
+.graph-header-item {
+    display: inline-block; 
+    margin-left: 2.5vw;
+    margin-right: 2.5vw;
+}
+
+.graph-header-text {
+    margin: 0px;
+    margin-top: 4px;
+}
+
+.graph-header-btn {
+    width: 3vw;
+    height: 3vw;
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.graph-header-btn:hover {
+    background-color: gray!important;
 }
