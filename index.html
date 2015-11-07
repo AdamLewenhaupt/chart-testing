@@ -18,6 +18,21 @@
                         <rect x="0" y="0.1" width="0.2" height="0.1" fill="#424242" />
                         <rect x="0" y="0" width="0.001" height="0.2" fill="#EFEFEF"></rect>
                     </pattern>
+
+                    <filter id="dropshadow" x="" y="" width="200%" height="200%">
+                        <feComponentTransfer in="SourceAlpha">
+                            <feFuncA type="table" tableValues="1 0" />
+                        </feComponentTransfer>
+                        <feGaussianBlur stdDeviation="10" />
+                        <feOffset dx="5" dy="5" result="offsetblur"  />
+                        <feFlood flood-color="rgb(180,0,0)" result="color" />
+                        <feComposite in="offsetblur" operator="in" />
+                        <feComposite in="SourceAlpha" operator="in" />
+                        <feMerge>
+                            <feMergeNode in="SourceGraphic" />
+                            <feMergeNode />
+                        </feMerge>
+                    </filter>
                 </defs>
             </svg>
         </div>

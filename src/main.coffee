@@ -1,4 +1,4 @@
-lineColors = [
+LINECOLORS = [
     "#00CCD6",
     "#FFD900",
     "#FB6648",
@@ -7,7 +7,18 @@ lineColors = [
     "#83BF17"
 ]
 
+DRAGGING = false
+
+INACTIVE = _.map _.range(6), (x) -> false
+
+setPosition = (x, y, width, height, el) ->
+    el.attr "x", x
+        .attr "y", y
+        .attr "width", width
+        .attr "height", height
+
 $ ->
+    console.log INACTIVE
     $.getJSON '/data.json', (data) ->
 
         information = data.information
@@ -16,9 +27,9 @@ $ ->
         WIDTH = vis.attr("width")
         HEIGHT = vis.attr("height") - 20
         MARGINS = 
-            top: 20
-            right: 20
-            bottom: 20
+            top: 50
+            right: 30
+            bottom: 50
             left: 50
 
         precisionFormat = d3.format(".1f")
@@ -26,21 +37,27 @@ $ ->
         xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,5])
         yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, 5])
 
-        xAxis = d3.svg.axis().scale(xScale).innerTickSize(10).ticks(6).tickFormat (d) -> 
+        xAxis = d3.svg.axis().scale(xScale).innerTickSize(30).ticks(6).tickFormat (d) -> 
             if d == 0 then "Nu" else "År #{d}"
 
         yAxis = d3.svg.axis().scale(yScale).orient('left').innerTickSize(10)
             .tickFormat (d) -> "#{precisionFormat d}%"
 
-        vis.append("svg:rect")
-            .attr "width", WIDTH - (MARGINS.left + MARGINS.right)
-            .attr "height", HEIGHT - (MARGINS.top + MARGINS.bottom)
-            .attr "x", MARGINS.left
-            .attr "y", MARGINS.top
+        width = WIDTH - (MARGINS.left + MARGINS.right)
+        height = HEIGHT - (MARGINS.top + MARGINS.bottom)
+
+        setPosition MARGINS.left, MARGINS.top, width, height, vis.append "svg:rect"
+            .classed 'graph-shadow', true
+            .style "filter", "url(#dropshadow)"
+
+        setPosition MARGINS.left, MARGINS.top, width, height, vis.append("svg:rect")
+            .classed 'graph-background', true
             .attr "fill", "url(#bars)"
+            .attr "filter", 'url(#dropshadow)'
             .on "mousedown", () -> 
                 d3.event.preventDefault()
                 false
+
             .on "mousemove", () ->
                 d3.event.preventDefault()
                 false
@@ -66,6 +83,7 @@ $ ->
                 d3.select(this).classed("dragging", true)
 
             .on "drag", (d) ->
+                DRAGGING = true
                 inv = yScale.invert d3.event.y
                 dot = d3.select(this)
                 inBounds = 0 <= inv <= 5
@@ -77,25 +95,47 @@ $ ->
                         year: dot.attr("index")
                         percentage: inv
 
-                lines[dot.attr('range-index')].attr 'd', lineGen(range.prediction)
+                lines[dot.attr('range-index')].line.attr 'd', lineGen(range.prediction)
 
             .on "dragend", (d) ->
+                DRAGGING = false
                 d3.select(this).classed("dragging", false)
+                oneMouseleaveLineOrDot d
 
         lines = []
         colorCounter = 0
+
+        onMouseoverLineOrDot = (d) ->
+            if DRAGGING 
+                return false
+
+            for l in lines
+                if +l.line.attr('range-index') != +d3.select(this).attr('range-index')
+                    l.line.attr 'opacity', 0.2
+                    l.points.attr 'opacity', 0.2
+
+        oneMouseleaveLineOrDot = (d) ->
+            if DRAGGING
+                return false
+
+            for l in lines
+                if not INACTIVE[+l.line.attr('range-index')]
+                    l.line.attr 'opacity', 1
+                    l.points.attr 'opacity', 1
+
+
 
         for range in information
 
             line =  vis.append("svg:path")
                 .attr 'd', lineGen(range.prediction)
+                .attr 'range-index', range.range
                 .classed 'line', true
-                .attr 'stroke', lineColors[colorCounter]
+                .attr 'stroke', LINECOLORS[range.range]
+                .on 'mouseover', onMouseoverLineOrDot
+                .on 'mouseleave', oneMouseleaveLineOrDot
 
-            lines.push line
-
-
-            vis.selectAll()
+            points = vis.selectAll()
                 .data range.prediction
                 .enter().append('circle')
                 .attr 'cx', (d) -> xScale(d.year)
@@ -104,8 +144,14 @@ $ ->
                 .classed "point", true
                 .attr 'range-index', range.range
                 .attr "r", 8
-                .attr 'fill', lineColors[colorCounter++]
+                .attr 'fill', LINECOLORS[range.range]
                 .call(drag)
+                .on 'mouseover', onMouseoverLineOrDot
+                .on 'mouseleave', oneMouseleaveLineOrDot
+
+            lines.push
+                line: line
+                points: points
 
         headerItems = d3.select(".graph-header")
             .selectAll()
@@ -115,8 +161,19 @@ $ ->
                 .classed 'graph-header-item', true
 
         headerItems.append('div')
+                .attr 'range-index', (d) -> d.range
                 .classed 'graph-header-btn', true
-                .style "background-color": (d) -> lineColors[d.range]
+                .style "background-color", (d) -> LINECOLORS[d.range]
+                .on 'click', (d) ->
+                    btn = d3.select(this)
+                    btn.classed 'inactive', !btn.classed('inactive')
+                    if btn.classed 'inactive'
+                        index = +btn.attr('range-index')
+                        INACTIVE[index] = true
+                        l = lines[index]
+                        l.line.attr 'opacity', 0.2
+                        l.points.attr 'opacity', 0.2
+
 
         headerItems.append('p')
                 .classed 'graph-header-text', true
