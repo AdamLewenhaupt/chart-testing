@@ -27,20 +27,27 @@ $ ->
         WIDTH = vis.attr("width")
         HEIGHT = vis.attr("height") - 20
         MARGINS = 
-            top: 10
+            top: 0
             right: 20
             bottom: 10
             left: 50
+            xaxis: 
+                right: 5
+                down: 10
+            yaxis: 
+                left: 5
+                down: 10
+
 
         precisionFormat = d3.format(".1f")
 
         xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,5])
         yScale = d3.scale.linear().range([HEIGHT - MARGINS.top - MARGINS.bottom, MARGINS.bottom]).domain([0, 5])
 
-        xAxis = d3.svg.axis().scale(xScale).innerTickSize(10).ticks(6).tickFormat (d) -> 
+        xAxis = d3.svg.axis().scale(xScale).ticks(6).tickFormat (d) -> 
             if d == 0 then "Nu" else "År #{d}"
 
-        yAxis = d3.svg.axis().scale(yScale).orient('left').innerTickSize(10).ticks(6)
+        yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(6)
             .tickFormat (d) -> "#{precisionFormat d}%"
 
         width = WIDTH - (MARGINS.left + MARGINS.right)
@@ -64,11 +71,12 @@ $ ->
 
 
         vis.append("svg:g")
-            .attr("transform", "translate(0,#{HEIGHT - MARGINS.bottom})") .call(xAxis)
+            .attr("transform", "translate(#{MARGINS.xaxis.right},#{HEIGHT - (MARGINS.bottom - MARGINS.xaxis.down) })")
+            .call(xAxis)
             .classed "axis", true
 
         vis.append("svg:g")
-            .attr("transform", "translate(#{ MARGINS.left }, 0)")
+            .attr("transform", "translate(#{ MARGINS.left - MARGINS.yaxis.left}, #{MARGINS.yaxis.down})")
             .call(yAxis)
             .classed "axis", true
 
