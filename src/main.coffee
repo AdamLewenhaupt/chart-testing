@@ -174,6 +174,14 @@ $ ->
                         l.line.attr 'opacity', 0.2
                         l.points.attr 'opacity', 0.2
 
+                    else
+                        index = +btn.attr('range-index')
+                        INACTIVE[index] = false
+                        l = lines[index]
+                        l.line.attr 'opacity', 1
+                        l.points.attr 'opacity', 1
+
+
 
         headerItems.append('p')
                 .classed 'graph-header-text', true
