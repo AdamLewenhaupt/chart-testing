@@ -4,13 +4,13 @@ body {
 }
 
 .point.dragging, .point:hover {
-    fill: #FFF;
+    fill: #FFD900;
     cursor: move;
 }
 
 .line {
     fill: none;
-    stroke-width: 4px;
+    stroke-width: 2px;
 }
 
 .axis path { 

@@ -1,12 +1,10 @@
-LINECOLORS = [
-    "#00CCD6",
-    "#FFD900",
-    "#FB6648",
-    "#FF2321",
-    "#FF66CC",
-    "#83BF17",
-    "#E94C6F"
-]
+colorOffset = 40
+colorStep = 60
+LINECOLORS = []
+
+for i in [1..7]
+    LINECOLORS.push "hsl(#{colorOffset + colorStep * i}, 40%, 50%"
+
 
 DRAGGING = false
 
@@ -55,7 +53,7 @@ $ ->
 
         setPosition MARGINS.left, MARGINS.top, width, height, vis.append "svg:rect"
             .classed 'graph-shadow', true
-            .style "filter", "url(#dropshadow)"
+            # .style "filter", "url(#dropshadow)"
 
         setPosition MARGINS.left, MARGINS.top, width, height, vis.append("svg:rect")
             .classed 'graph-background', true
@@ -193,10 +191,10 @@ $ ->
 
         headerItems.append('p')
                 .classed 'graph-header-text', true
-                .text (d) -> switch d.range
-                    when 0
-                        "Rörlig ränta"
-                    when 1
-                        "3 Månader"
+                .text (d) ->
+                    if d.range == 0
+                        "3 mån"
+                    else if d.range < 4
+                        "#{d.range} år"
                     else
-                        "#{d.range - 1} År"
+                        "#{d.range+1} år"
