@@ -60,6 +60,16 @@
                 { "year": 4, "percentage": 3.6 },
                 { "year": 5, "percentage": 3.8 }
             ]
+        },
+        {
+            "range": 6, "prediction": [
+                { "year": 0, "percentage": 2.6 },
+                { "year": 1, "percentage": 3.0 },
+                { "year": 2, "percentage": 3.2 },
+                { "year": 3, "percentage": 3.6 },
+                { "year": 4, "percentage": 4.2 },
+                { "year": 5, "percentage": 4.6 }
+            ]
         }
     ]
 }

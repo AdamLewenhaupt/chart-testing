@@ -4,12 +4,13 @@ LINECOLORS = [
     "#FB6648",
     "#FF2321",
     "#FF66CC",
-    "#83BF17"
+    "#83BF17",
+    "#E94C6F"
 ]
 
 DRAGGING = false
 
-INACTIVE = _.map _.range(6), (x) -> false
+INACTIVE = _.map _.range(7), (x) -> false
 
 setPosition = (x, y, width, height, el) ->
     el.attr "x", x
@@ -18,7 +19,6 @@ setPosition = (x, y, width, height, el) ->
         .attr "height", height
 
 $ ->
-    console.log INACTIVE
     $.getJSON '/data.json', (data) ->
 
         information = data.information
@@ -27,20 +27,20 @@ $ ->
         WIDTH = vis.attr("width")
         HEIGHT = vis.attr("height") - 20
         MARGINS = 
-            top: 50
-            right: 30
-            bottom: 50
+            top: 10
+            right: 20
+            bottom: 10
             left: 50
 
         precisionFormat = d3.format(".1f")
 
         xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,5])
-        yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, 5])
+        yScale = d3.scale.linear().range([HEIGHT - MARGINS.top - MARGINS.bottom, MARGINS.bottom]).domain([0, 5])
 
-        xAxis = d3.svg.axis().scale(xScale).innerTickSize(30).ticks(6).tickFormat (d) -> 
+        xAxis = d3.svg.axis().scale(xScale).innerTickSize(10).ticks(6).tickFormat (d) -> 
             if d == 0 then "Nu" else "År #{d}"
 
-        yAxis = d3.svg.axis().scale(yScale).orient('left').innerTickSize(10)
+        yAxis = d3.svg.axis().scale(yScale).orient('left').innerTickSize(10).ticks(6)
             .tickFormat (d) -> "#{precisionFormat d}%"
 
         width = WIDTH - (MARGINS.left + MARGINS.right)
@@ -185,4 +185,10 @@ $ ->
 
         headerItems.append('p')
                 .classed 'graph-header-text', true
-                .text (d) -> if d.range == 0 then "3 Månader" else "#{d.range} År"
+                .text (d) -> switch d.range
+                    when 0
+                        "Rörlig ränta"
+                    when 1
+                        "3 Månader"
+                    else
+                        "#{d.range - 1} År"
