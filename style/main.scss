@@ -1,6 +1,14 @@
+$base: hsl(0, 0, 90%);
+
+$normal: hsl(0, 0, 95%);
+$normalShadow: hsl(0, 0, 60%);
+
+$front: hsl(0, 0, 100%);
+$frontShadow: hsl(0, 0, 80%);
+
 body {
     text-align: center; 
-    background-color: 
+    background-color: hsl(0, 0%, 100%);
 }
 
 .point.dragging, .point:hover {
@@ -19,24 +27,24 @@ body {
 }
 
 body {
-    background-color: #424242;
+    background-color: $base;
 }
 
 
 .graph {
     margin-top: 10px;
     border-radius: 2px;
-    box-shadow: 2px 2px 30px black;
+    box-shadow: 2px 2px 30px $normalShadow;
     display: inline-block;
     padding: 20px;
-    background-color: #C4D4AF;
+    background-color: $normal;
 }
 
 .graph-header {
-    box-shadow: 2px 2px 20px;
+    box-shadow: 2px 2px 20px $frontShadow;
     border-radius: 2px;
     padding: 10px;
-    background-color: #EFEFEF;
+    background-color: $front;
 }
 
 .graph-header-item {
@@ -59,4 +67,18 @@ body {
 
 .graph-header-btn:hover, .graph-header-btn.inactive {
     opacity: 0.5;
+}
+
+.graph-footer {
+    margin-top: 20px;
+}
+
+.result {
+    margin-top: 10px;
+    border-radius: 2px;
+    box-shadow: 2px 2px 30px $normalShadow;
+    display: inline-block;
+    padding: 20px;
+    padding-top: 0px;
+    background-color: $normal;
 }

@@ -2,7 +2,7 @@
     <head>
         <meta charset="utf-8">
         <link href="./bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="main.css" rel="stylesheet">
+        <link href="lib/main.css" rel="stylesheet">
         <script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
         <script src="./bower_components/d3/d3.min.js" type="text/javascript"></script>
         <script src="./bower_components/underscore/underscore-min.js" type="text/javascript"></script>
@@ -11,20 +11,20 @@
     <body>
         <div class="graph">
             <div class="graph-header"></div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="1000" id="visualisation" height="300">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1000" id="graph-visualisation" height="300">
                 <defs>
                     <pattern patternContentUnits="objectBoundingBox" id="bars" x="0" y="0" width="0.2" height="0.2">
-                        <rect x="0" y="0" width="0.2" height="0.1" fill="#E9E0D6" />
-                        <rect x="0" y="0.1" width="0.2" height="0.1" fill="#FFFFFF" />
-                        <rect x="0" y="0" width="0.001" height="0.2" fill="#EFEFEF"></rect>
+                        <rect x="0" y="0" width="0.2" height="0.1" fill="hsl(0,0%,70%)" />
+                        <rect x="0" y="0.1" width="0.2" height="0.1" fill="hsl(0,0%,80%)" />
+                        <rect x="0" y="0" width="0.001" height="0.2" fill="hsl(0,0%,40%)"></rect>
                     </pattern>
 
                     <filter id="dropshadow" x="" y="" width="200%" height="200%">
                         <feComponentTransfer in="SourceAlpha">
                             <feFuncA type="table" tableValues="1 0" />
                         </feComponentTransfer>
-                        <feGaussianBlur stdDeviation="6" />
-                        <feOffset dx="2" dy="2" result="offsetblur"  />
+                        <feGaussianBlur stdDeviation="8" />
+                        <feOffset dx="0" dy="0" result="offsetblur"  />
                         <feFlood flood-color="rgb(0,0,0)" result="color" />
                         <feComposite in="offsetblur" operator="in" />
                         <feComposite in="SourceAlpha" operator="in" />
@@ -35,6 +35,16 @@
                     </filter>
                 </defs>
             </svg>
+            <div class="graph-footer">
+                <div class="btn btn-success btn-lg">Optimera ditt bolån</div>
+                <div class="btn btn-primary btn-lg">Återställ</div>
+            </div>
+        </div>
+
+
+        <div class="result">
+            <h1>Såhär kan du bäst strukturera ditt bolån</h1>
+            <svg id="result-visualisation"></svg>
         </div>
     </body>
 </html>

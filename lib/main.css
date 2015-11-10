@@ -1,0 +1,64 @@
+body {
+  text-align: center;
+  background-color: white; }
+
+.point.dragging, .point:hover {
+  fill: #FFD900;
+  cursor: move; }
+
+.line {
+  fill: none;
+  stroke-width: 2px; }
+
+.axis path {
+  /* fill: #333333; */
+  fill: none; }
+
+body {
+  background-color: #e6e6e6; }
+
+.graph {
+  margin-top: 10px;
+  border-radius: 2px;
+  box-shadow: 2px 2px 30px #999999;
+  display: inline-block;
+  padding: 20px;
+  background-color: #f2f2f2; }
+
+.graph-header {
+  box-shadow: 2px 2px 20px #cccccc;
+  border-radius: 2px;
+  padding: 10px;
+  background-color: white; }
+
+.graph-header-item {
+  display: inline-block;
+  margin-left: 2.5vw;
+  margin-right: 2.5vw; }
+
+.graph-header-text {
+  margin: 0px;
+  margin-top: 4px; }
+
+.graph-header-btn {
+  width: 3vw;
+  height: 3vw;
+  display: inline-block;
+  border-radius: 50%; }
+
+.graph-header-btn:hover, .graph-header-btn.inactive {
+  opacity: 0.5; }
+
+.graph-footer {
+  margin-top: 20px; }
+
+.result {
+  margin-top: 10px;
+  border-radius: 2px;
+  box-shadow: 2px 2px 30px #999999;
+  display: inline-block;
+  padding: 20px;
+  padding-top: 0px;
+  background-color: #f2f2f2; }
+
+/*# sourceMappingURL=main.css.map */

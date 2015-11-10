@@ -2,13 +2,13 @@ colorOffset = 40
 colorStep = 60
 LINECOLORS = []
 
-for i in [1..7]
-    LINECOLORS.push "hsl(#{colorOffset + colorStep * i}, 40%, 50%"
+for i in [1..5]
+    LINECOLORS.push "hsl(#{colorOffset + colorStep * i}, 50%, 50%"
 
 
 DRAGGING = false
 
-INACTIVE = _.map _.range(7), (x) -> false
+INACTIVE = _.map _.range(5), (x) -> false
 
 setPosition = (x, y, width, height, el) ->
     el.attr "x", x
@@ -21,7 +21,7 @@ $ ->
 
         information = data.information
 
-        vis = d3.select('#visualisation')
+        vis = d3.select('#graph-visualisation')
         WIDTH = vis.attr("width")
         HEIGHT = vis.attr("height") - 20
         MARGINS = 
@@ -112,7 +112,7 @@ $ ->
         colorCounter = 0
 
         onMouseoverLineOrDot = (d) ->
-            if DRAGGING 
+            if DRAGGING or INACTIVE[+d3.select(this).attr('range-indeẍ́')]
                 return false
 
             for l in lines
@@ -121,7 +121,7 @@ $ ->
                     l.points.attr 'opacity', 0.2
 
         oneMouseleaveLineOrDot = (d) ->
-            if DRAGGING
+            if DRAGGING or INACTIVE[+d3.select(this).attr('range-index')]
                 return false
 
             for l in lines
