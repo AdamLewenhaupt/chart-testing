@@ -2,11 +2,22 @@ $ ->
     vis = d3.select('#result-visualisation')
     width = vis.attr('width')
     height = vis.attr('height')
-    result = [
-        { range: "0", dist:  0.2 },
-        { range: "1", dist:  0.3 },
-        { range: "4", dist:  0.5 }
-    ]
+
+    ranges = Math.floor (Math.random() * 4) + 1
+    sample = _.sample([0..4], ranges)
+
+    itr = (memo, num) ->
+        d = Math.min((Math.random() + 0.11) * (1 - memo.acc), 1)
+        if d > 0.1
+            memo.l.push { range: "#{num}", dist: d }
+            memo.acc = memo.acc + d
+        return memo
+
+    spawn =  _.reduce sample, itr, { l: [], acc: 0 }
+    spawn.l[0].dist += 1 - spawn.acc
+    
+    result = spawn.l
+    console.log result
 
     timeParserMany _.pluck(result, "range"), (err, texts) ->
 
@@ -25,10 +36,10 @@ $ ->
                 down: 10
 
         xScale = d3.scale.linear().domain([0,100]).range [MARGINS.left, width - MARGINS.right]
-        yScale = d3.scale.linear().domain([0, result.length - 1]).range [height - MARGINS.top - MARGINS.bottom, MARGINS.bottom]
+        yScale = d3.scale.linear().domain([0, result.length]).range [height - MARGINS.top, MARGINS.bottom]
 
         xAxis = d3.svg.axis().scale(xScale).tickFormat (d) -> "#{d}%"
-        yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(result.length).tickFormat (d) -> texts[d]
+        yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(result.length).tickFormat (d) -> texts[d-1]
 
         vis.append("svg:g")
             .attr("transform", "translate(#{MARGINS.xaxis.right},#{height - (MARGINS.bottom - MARGINS.xaxis.down) })")
@@ -36,7 +47,7 @@ $ ->
             .classed 'axis', true
 
         vis.append("svg:g")
-            .attr("transform", "translate(#{MARGINS.left - MARGINS.yaxis.left}, #{MARGINS.yaxis.down + MARGINS.top - MARGINS.bottom})")
+            .attr("transform", "translate(#{MARGINS.left - MARGINS.yaxis.left}, #{MARGINS.yaxis.down + MARGINS.top})")
             .call yAxis
             .classed 'axis', true
 
