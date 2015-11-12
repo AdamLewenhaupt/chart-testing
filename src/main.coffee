@@ -3,7 +3,7 @@ colorStep = 60
 LINECOLORS = []
 
 for i in [1..5]
-    LINECOLORS.push "hsl(#{colorOffset + colorStep * i}, 50%, 50%"
+    LINECOLORS.push "hsl(#{colorOffset + colorStep * i}, 60%, 60%"
 
 
 DRAGGING = false
@@ -51,10 +51,6 @@ $ ->
         width = WIDTH - (MARGINS.left + MARGINS.right)
         height = HEIGHT - (MARGINS.top + MARGINS.bottom)
 
-        setPosition MARGINS.left, MARGINS.top, width, height, vis.append "svg:rect"
-            .classed 'graph-shadow', true
-            # .style "filter", "url(#dropshadow)"
-
         setPosition MARGINS.left, MARGINS.top, width, height, vis.append("svg:rect")
             .classed 'graph-background', true
             .attr "fill", "url(#bars)"
@@ -101,12 +97,12 @@ $ ->
                         year: dot.attr("index")
                         percentage: inv
 
-                lines[dot.attr('range-index')].line.attr 'd', lineGen(range.prediction)
+                    lines[dot.attr('range-index')].line.attr 'd', lineGen(range.prediction)
 
             .on "dragend", (d) ->
                 DRAGGING = false
                 d3.select(this).classed("dragging", false)
-                oneMouseleaveLineOrDot d
+                onMouseLeaveLineOrDot.apply this, d
 
         lines = []
         colorCounter = 0
@@ -120,7 +116,7 @@ $ ->
                     l.line.attr 'opacity', 0.2
                     l.points.attr 'opacity', 0.2
 
-        oneMouseleaveLineOrDot = (d) ->
+        onMouseLeaveLineOrDot = (d) ->
             if DRAGGING or INACTIVE[+d3.select(this).attr('range-index')]
                 return false
 
@@ -139,7 +135,7 @@ $ ->
                 .classed 'line', true
                 .attr 'stroke', LINECOLORS[range.range]
                 .on 'mouseover', onMouseoverLineOrDot
-                .on 'mouseleave', oneMouseleaveLineOrDot
+                .on 'mouseleave', onMouseLeaveLineOrDot
 
             points = vis.selectAll()
                 .data range.prediction
@@ -153,7 +149,7 @@ $ ->
                 .attr 'fill', LINECOLORS[range.range]
                 .call(drag)
                 .on 'mouseover', onMouseoverLineOrDot
-                .on 'mouseleave', oneMouseleaveLineOrDot
+                .on 'mouseleave', onMouseLeaveLineOrDot
 
             lines.push
                 line: line
@@ -167,7 +163,7 @@ $ ->
                 .classed 'graph-header-item', true
 
         headerItems.append('div')
-                .attr 'range-index', (d) -> d.range
+            .attr 'range-index', (d) -> d.range
                 .classed 'graph-header-btn', true
                 .style "background-color", (d) -> LINECOLORS[d.range]
                 .on 'click', (d) ->
@@ -188,13 +184,8 @@ $ ->
                         l.points.attr 'opacity', 1
 
 
+        texts = headerItems.append('p')
+            .classed 'graph-header-text', true
 
-        headerItems.append('p')
-                .classed 'graph-header-text', true
-                .text (d) ->
-                    if d.range == 0
-                        "3 mån"
-                    else if d.range < 4
-                        "#{d.range} år"
-                    else
-                        "#{d.range+1} år"
+        timeParserMany _.pluck(texts.data(), "range"), (err, result) ->
+            texts.text (d) -> result[d.range]

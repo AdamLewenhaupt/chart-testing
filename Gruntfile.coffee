@@ -2,7 +2,7 @@ module.exports = (grunt) ->
 
     grunt.initConfig
         pkg: grunt.file.readJSON('package.json')
-        coffee: 
+        coffeeMap: 
             compile:
                 expand: true
                 flatten: true
@@ -10,6 +10,16 @@ module.exports = (grunt) ->
                 src: ['*.coffee']
                 dest: 'lib/'
                 ext: '.js'
+
+        coffee:
+            compile:
+                options:
+                    join: true
+                    bare: true
+
+                files:
+                    'lib/main.js': ['./src/graph-helpers.coffee', './src/main.coffee', './src/result.coffee']
+
 
         sass:
             dist:
