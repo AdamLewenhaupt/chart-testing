@@ -7,14 +7,7 @@ for i in [1..5]
 
 
 DRAGGING = false
-
 INACTIVE = _.map _.range(5), (x) -> false
-
-setPosition = (x, y, width, height, el) ->
-    el.attr "x", x
-        .attr "y", y
-        .attr "width", width
-        .attr "height", height
 
 $ ->
     $.getJSON '/data.json', (data) ->
@@ -51,10 +44,14 @@ $ ->
         width = WIDTH - (MARGINS.left + MARGINS.right)
         height = HEIGHT - (MARGINS.top + MARGINS.bottom)
 
-        setPosition MARGINS.left, MARGINS.top, width, height, vis.append("svg:rect")
+        vis.append("svg:rect")
             .classed 'graph-background', true
             .attr "fill", "url(#bars)"
             .attr "filter", 'url(#dropshadow)'
+            .attr "x", MARGINS.left
+            .attr "y", MARGINS.top
+            .attr "width", width
+            .attr "height", height
             .on "mousedown", () -> 
                 d3.event.preventDefault()
                 false

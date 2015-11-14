@@ -1,6 +1,15 @@
+.no-select, .flat-btn {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
 body {
   text-align: center;
-  background-color: white; }
+  background-color: #e6e6e6;
+  color: #1a1a1a; }
 
 .point.dragging, .point:hover {
   fill: #FFD900;
@@ -13,9 +22,6 @@ body {
 .axis path {
   /* fill: #333333; */
   fill: none; }
-
-body {
-  background-color: #e6e6e6; }
 
 .graph {
   margin-top: 10px;
@@ -60,5 +66,30 @@ body {
   padding: 20px;
   padding-top: 0px;
   background-color: #f2f2f2; }
+
+.flat-btn {
+  display: inline-block;
+  width: 40%;
+  padding: 0px;
+  margin: 0px;
+  padding: 20px;
+  font-size: 20px;
+  border-radius: 2px;
+  box-shadow: 2px 2px 10px #cccccc;
+  cursor: pointer; }
+
+.flat-btn.success {
+  background-color: #75f075; }
+
+.flat-btn.success:hover {
+  background-color: #5cd65c;
+  color: #f2f2f2; }
+
+.flat-btn.primary {
+  background-color: #75c7f0; }
+
+.flat-btn.primary:hover {
+  background-color: #5cadd6;
+  color: #f2f2f2; }
 
 /*# sourceMappingURL=main.css.map */
