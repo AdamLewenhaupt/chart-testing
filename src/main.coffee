@@ -10,6 +10,10 @@ DRAGGING = false
 INACTIVE = _.map _.range(5), (x) -> false
 
 $ ->
+    $("#generate-result").click () ->
+        generateResult randomResult()
+
+
     $.getJSON '/data.json', (data) ->
 
         information = data.information

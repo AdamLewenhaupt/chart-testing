@@ -33,6 +33,7 @@ generateAxises = (vis, result, texts, width, height) ->
 
 generateBackground = (vis, width, height) ->
     vis.append('svg:rect')
+        .attr 'id', 'background'
         .attr "fill", "url(#bars-vertical)"
         .attr "filter", "url(#dropshadow)"
         .attr "width", width - MARGINS.left - MARGINS.right
@@ -64,12 +65,13 @@ generateResult = (result) ->
     timeParserMany _.pluck(result, "range"), (err, texts) ->
 
         xScale = generateAxises vis, result, texts, width, height
-        generateBackground vis, width, height
+
+        if vis.selectAll('#background').empty()
+            generateBackground vis, width, height
+
         generateChart vis, result, width, height, xScale
 
-
-$ ->
-
+randomResult = () ->
     ranges = Math.floor (Math.random() * 4) + 1
     sample = _.sample([0..4], ranges)
 
@@ -83,6 +85,8 @@ $ ->
     spawn =  _.reduce sample, itr, { l: [], acc: 0 }
     spawn.l[0].dist += 1 - spawn.acc
     
-    result = spawn.l
+    return spawn.l
 
+$ ->
+    result = randomResult()
     generateResult result
