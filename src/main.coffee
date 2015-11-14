@@ -8,6 +8,17 @@ for i in [1..5]
 
 DRAGGING = false
 INACTIVE = _.map _.range(5), (x) -> false
+GRAPH_MARGINS = 
+    top: 0
+    right: 20
+    bottom: 10
+    left: 50
+    xaxis: 
+        right: 5
+        down: 10
+    yaxis: 
+        left: 5
+        down: 10
 
 $ ->
     $("#generate-result").click () ->
@@ -21,23 +32,12 @@ $ ->
         vis = d3.select('#graph-visualisation')
         WIDTH = vis.attr("width")
         HEIGHT = vis.attr("height") - 20
-        MARGINS = 
-            top: 0
-            right: 20
-            bottom: 10
-            left: 50
-            xaxis: 
-                right: 5
-                down: 10
-            yaxis: 
-                left: 5
-                down: 10
 
 
         precisionFormat = d3.format(".1f")
 
-        xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,5])
-        yScale = d3.scale.linear().range([HEIGHT - MARGINS.top - MARGINS.bottom, MARGINS.bottom]).domain([0, 5])
+        xScale = d3.scale.linear().range([GRAPH_MARGINS.left, WIDTH - GRAPH_MARGINS.right]).domain([0,5])
+        yScale = d3.scale.linear().range([HEIGHT - GRAPH_MARGINS.top - GRAPH_MARGINS.bottom, GRAPH_MARGINS.bottom]).domain([0, 5])
 
         xAxis = d3.svg.axis().scale(xScale).ticks(6).tickFormat (d) -> 
             if d == 0 then "Nu" else "År #{d}"
@@ -45,15 +45,15 @@ $ ->
         yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(6)
             .tickFormat (d) -> "#{precisionFormat d}%"
 
-        width = WIDTH - (MARGINS.left + MARGINS.right)
-        height = HEIGHT - (MARGINS.top + MARGINS.bottom)
+        width = WIDTH - (GRAPH_MARGINS.left + GRAPH_MARGINS.right)
+        height = HEIGHT - (GRAPH_MARGINS.top + GRAPH_MARGINS.bottom)
 
         vis.append("svg:rect")
             .classed 'graph-background', true
             .attr "fill", "url(#bars)"
             .attr "filter", 'url(#dropshadow)'
-            .attr "x", MARGINS.left
-            .attr "y", MARGINS.top
+            .attr "x", GRAPH_MARGINS.left
+            .attr "y", GRAPH_MARGINS.top
             .attr "width", width
             .attr "height", height
             .on "mousedown", () -> 
@@ -66,12 +66,12 @@ $ ->
 
 
         vis.append("svg:g")
-            .attr("transform", "translate(#{MARGINS.xaxis.right},#{HEIGHT - (MARGINS.bottom - MARGINS.xaxis.down) })")
+            .attr("transform", "translate(#{GRAPH_MARGINS.xaxis.right},#{HEIGHT - (GRAPH_MARGINS.bottom - GRAPH_MARGINS.xaxis.down) })")
             .call(xAxis)
             .classed "axis", true
 
         vis.append("svg:g")
-            .attr("transform", "translate(#{ MARGINS.left - MARGINS.yaxis.left}, #{MARGINS.yaxis.down})")
+            .attr("transform", "translate(#{ GRAPH_MARGINS.left - GRAPH_MARGINS.yaxis.left}, #{GRAPH_MARGINS.yaxis.down})")
             .call(yAxis)
             .classed "axis", true
 

@@ -1,4 +1,4 @@
-MARGINS = 
+RESULT_MARGINS = 
     top: 10
     bottom: 50
     left: 70
@@ -13,19 +13,19 @@ MARGINS =
         down: 10
 
 generateAxises = (vis, result, texts, width, height) ->
-        xScale = d3.scale.linear().domain([0,100]).range [MARGINS.left, width - MARGINS.right]
-        yScale = d3.scale.linear().domain([0, result.length]).range [height - MARGINS.top, MARGINS.bottom]
+        xScale = d3.scale.linear().domain([0,100]).range [RESULT_MARGINS.left, width - RESULT_MARGINS.right]
+        yScale = d3.scale.linear().domain([0, result.length]).range [height - RESULT_MARGINS.top, RESULT_MARGINS.bottom]
 
         xAxis = d3.svg.axis().scale(xScale).tickFormat (d) -> "#{d}%"
         yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(result.length).tickFormat (d) -> texts[d-1]
 
         vis.append("svg:g")
-            .attr("transform", "translate(#{MARGINS.xaxis.right},#{height - (MARGINS.bottom - MARGINS.xaxis.down) })")
+            .attr("transform", "translate(#{RESULT_MARGINS.xaxis.right},#{height - (RESULT_MARGINS.bottom - RESULT_MARGINS.xaxis.down) })")
             .call xAxis
             .classed 'axis', true
 
         vis.append("svg:g")
-            .attr("transform", "translate(#{MARGINS.left - MARGINS.yaxis.left}, #{MARGINS.yaxis.down + MARGINS.top})")
+            .attr("transform", "translate(#{RESULT_MARGINS.left - RESULT_MARGINS.yaxis.left}, #{RESULT_MARGINS.yaxis.down + RESULT_MARGINS.top})")
             .call yAxis
             .classed 'axis', true
 
@@ -36,10 +36,10 @@ generateBackground = (vis, width, height) ->
         .attr 'id', 'background'
         .attr "fill", "url(#bars-vertical)"
         .attr "filter", "url(#dropshadow)"
-        .attr "width", width - MARGINS.left - MARGINS.right
-        .attr "height", height - MARGINS.bottom - MARGINS.top
-        .attr 'x', MARGINS.left
-        .attr 'y', MARGINS.top
+        .attr "width", width - RESULT_MARGINS.left - RESULT_MARGINS.right
+        .attr "height", height - RESULT_MARGINS.bottom - RESULT_MARGINS.top
+        .attr 'x', RESULT_MARGINS.left
+        .attr 'y', RESULT_MARGINS.top
 
 generateChart = (vis, result, width, height, xScale) ->
     vis.append('svg:g')
@@ -47,12 +47,12 @@ generateChart = (vis, result, width, height, xScale) ->
         .data(result)
         .enter()
         .append('svg:rect')
-        .attr 'height', (height - MARGINS.bottom - MARGINS.top) / result.length
+        .attr 'height', (height - RESULT_MARGINS.bottom - RESULT_MARGINS.top) / result.length
         .attr 'width', (d) -> xScale(d.dist)
-        .attr 'x', MARGINS.left
-        .attr 'y', (d,i) -> MARGINS.top + i*(height - MARGINS.bottom - MARGINS.top)/result.length
+        .attr 'x', RESULT_MARGINS.left
+        .attr 'y', (d,i) -> RESULT_MARGINS.top + i*(height - RESULT_MARGINS.bottom - RESULT_MARGINS.top)/result.length
         .attr 'fill', (d) -> LINECOLORS[d.range]
-        .attr 'width', (d) -> (width - MARGINS.left - MARGINS.right) * d.dist
+        .attr 'width', (d) -> (width - RESULT_MARGINS.left - RESULT_MARGINS.right) * d.dist
 
 
 
