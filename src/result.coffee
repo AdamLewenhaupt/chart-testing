@@ -31,15 +31,22 @@ generateAxises = (vis, result, texts, width, height) ->
 
         return xScale
 
-generateBackground = (vis, width, height) ->
+generateBackground = (vis, width, height, background, margins) ->
     vis.append('svg:rect')
-        .attr 'id', 'background'
-        .attr "fill", "url(#bars-vertical)"
+        .classed 'graph-background', true
+        .attr "fill", "url(##{background})"
         .attr "filter", "url(#dropshadow)"
-        .attr "width", width - RESULT_MARGINS.left - RESULT_MARGINS.right
-        .attr "height", height - RESULT_MARGINS.bottom - RESULT_MARGINS.top
-        .attr 'x', RESULT_MARGINS.left
-        .attr 'y', RESULT_MARGINS.top
+        .attr "width", width - margins.left - margins.right
+        .attr "height", height - margins.bottom - margins.top
+        .attr 'x', margins.left
+        .attr 'y', margins.top
+        .on "mousedown", () -> 
+            d3.event.preventDefault()
+            false
+
+        .on "mousemove", () ->
+            d3.event.preventDefault()
+            false
 
 generateChart = (vis, result, width, height, xScale) ->
     vis.append('svg:g')
@@ -66,8 +73,8 @@ generateResult = (result) ->
 
         xScale = generateAxises vis, result, texts, width, height
 
-        if vis.selectAll('#background').empty()
-            generateBackground vis, width, height
+        if vis.selectAll('.graph-background').empty()
+            generateBackground vis, width, height, "bars-vertical", RESULT_MARGINS
 
         generateChart vis, result, width, height, xScale
 

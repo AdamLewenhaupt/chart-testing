@@ -48,22 +48,7 @@ $ ->
         width = WIDTH - (GRAPH_MARGINS.left + GRAPH_MARGINS.right)
         height = HEIGHT - (GRAPH_MARGINS.top + GRAPH_MARGINS.bottom)
 
-        vis.append("svg:rect")
-            .classed 'graph-background', true
-            .attr "fill", "url(#bars)"
-            .attr "filter", 'url(#dropshadow)'
-            .attr "x", GRAPH_MARGINS.left
-            .attr "y", GRAPH_MARGINS.top
-            .attr "width", width
-            .attr "height", height
-            .on "mousedown", () -> 
-                d3.event.preventDefault()
-                false
-
-            .on "mousemove", () ->
-                d3.event.preventDefault()
-                false
-
+        generateBackground vis, WIDTH, HEIGHT, "bars", GRAPH_MARGINS
 
         vis.append("svg:g")
             .attr("transform", "translate(#{GRAPH_MARGINS.xaxis.right},#{HEIGHT - (GRAPH_MARGINS.bottom - GRAPH_MARGINS.xaxis.down) })")
