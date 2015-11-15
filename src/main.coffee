@@ -5,7 +5,6 @@ LINECOLORS = []
 for i in [1..5]
     LINECOLORS.push "hsl(#{colorOffset + colorStep * i}, 60%, 60%"
 
-
 DRAGGING = false
 INACTIVE = _.map _.range(5), (x) -> false
 GRAPH_MARGINS = 
@@ -70,7 +69,6 @@ generateGraphAxises = (vis, xScale, yScale, height) ->
 
 
 onMouseoverLineOrDot = (d, lines) ->
-    console.log d3.select(this).attr('range-index')
     if DRAGGING or INACTIVE[+d3.select(this).attr('range-indeẍ́')]
         return false
 
@@ -80,7 +78,6 @@ onMouseoverLineOrDot = (d, lines) ->
             l.points.attr 'opacity', 0.2
 
 onMouseLeaveLineOrDot = (d, lines) ->
-    console.log d3.select(this).attr('range-index')
     if DRAGGING or INACTIVE[+d3.select(this).attr('range-index')]
         return false
 
@@ -89,6 +86,72 @@ onMouseLeaveLineOrDot = (d, lines) ->
             l.line.attr 'opacity', 1
             l.points.attr 'opacity', 1
 
+
+createLine = (vis, lineGen, range) ->
+    main = this
+    vis.append("svg:path")
+        .attr 'd', lineGen(range.prediction)
+        .attr 'range-index', range.range
+        .classed 'line', true
+        .attr 'stroke', LINECOLORS[range.range]
+        .on 'mouseover', (d) -> onMouseoverLineOrDot.call this, d, main.lines
+        .on 'mouseleave', (d) -> onMouseLeaveLineOrDot.call this, d, main.lines
+
+
+createPoints  = (vis, xScale, yScale, range, pointDrag) ->
+    main = this
+    vis.selectAll() 
+        .data range.prediction
+        .enter().append('circle')
+        .attr 'cx', (d) -> xScale(d.year)
+        .attr 'cy', (d) -> yScale(d.percentage)
+        .attr 'index', (d) -> range.prediction.indexOf(d)
+        .classed "point", true
+        .attr 'range-index', range.range
+        .attr "r", 8
+        .attr 'fill', LINECOLORS[range.range]
+        .call(pointDrag)
+        .on 'mouseover', (d) -> onMouseoverLineOrDot.call this, d, main.lines
+        .on 'mouseleave', (d) -> onMouseLeaveLineOrDot.call this, d, main.lines
+
+
+createHeader = (information) ->
+    main = this
+
+    headerItems = d3.select(".graph-header")
+        .selectAll()
+        .data(information)
+        .enter()
+        .append('div')
+            .classed 'graph-header-item', true
+
+    headerItems.append('div')
+        .attr 'range-index', (d) -> d.range
+            .classed 'graph-header-btn', true
+            .style "background-color", (d) -> LINECOLORS[d.range]
+            .on 'click', (d) ->
+                btn = d3.select(this)
+                btn.classed 'inactive', !btn.classed('inactive')
+                if btn.classed 'inactive'
+                    index = +btn.attr('range-index')
+                    INACTIVE[index] = true
+                    l = this.lines[index]
+                    l.line.attr 'opacity', 0.2
+                    l.points.attr 'opacity', 0.2
+
+                else
+                    index = +btn.attr('range-index')
+                    INACTIVE[index] = false
+                    l = lines[index]
+                    l.line.attr 'opacity', 1
+                    l.points.attr 'opacity', 1
+
+
+    texts = headerItems.append('p')
+        .classed 'graph-header-text', true
+
+    timeParserMany _.pluck(texts.data(), "range"), (err, result) ->
+        texts.text (d) -> result[d.range]
 
 $ ->
     $("#generate-result").click () ->
@@ -124,63 +187,12 @@ $ ->
 
         for range in information
 
-            line =  vis.append("svg:path")
-                .attr 'd', lineGen(range.prediction)
-                .attr 'range-index', range.range
-                .classed 'line', true
-                .attr 'stroke', LINECOLORS[range.range]
-                .on 'mouseover', (d) -> onMouseoverLineOrDot.call this, d, lines
-                .on 'mouseleave', (d) -> onMouseLeaveLineOrDot.call this, d, lines
-
-            points = vis.selectAll()
-                .data range.prediction
-                .enter().append('circle')
-                .attr 'cx', (d) -> xScale(d.year)
-                .attr 'cy', (d) -> yScale(d.percentage)
-                .attr 'index', (d) -> range.prediction.indexOf(d)
-                .classed "point", true
-                .attr 'range-index', range.range
-                .attr "r", 8
-                .attr 'fill', LINECOLORS[range.range]
-                .call(pointDrag)
-                .on 'mouseover', (d) -> onMouseoverLineOrDot.call this, d, lines
-                .on 'mouseleave', (d) -> onMouseLeaveLineOrDot.call this, d, lines
+            line = createLine.call this, vis, lineGen, range
+            points = createPoints.call this, vis, xScale, yScale, range, pointDrag, lines
 
             lines.push
                 line: line
                 points: points
 
-        headerItems = d3.select(".graph-header")
-            .selectAll()
-            .data(information)
-            .enter()
-            .append('div')
-                .classed 'graph-header-item', true
 
-        headerItems.append('div')
-            .attr 'range-index', (d) -> d.range
-                .classed 'graph-header-btn', true
-                .style "background-color", (d) -> LINECOLORS[d.range]
-                .on 'click', (d) ->
-                    btn = d3.select(this)
-                    btn.classed 'inactive', !btn.classed('inactive')
-                    if btn.classed 'inactive'
-                        index = +btn.attr('range-index')
-                        INACTIVE[index] = true
-                        l = lines[index]
-                        l.line.attr 'opacity', 0.2
-                        l.points.attr 'opacity', 0.2
-
-                    else
-                        index = +btn.attr('range-index')
-                        INACTIVE[index] = false
-                        l = lines[index]
-                        l.line.attr 'opacity', 1
-                        l.points.attr 'opacity', 1
-
-
-        texts = headerItems.append('p')
-            .classed 'graph-header-text', true
-
-        timeParserMany _.pluck(texts.data(), "range"), (err, result) ->
-            texts.text (d) -> result[d.range]
+        createHeader.call this, information
