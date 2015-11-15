@@ -20,6 +20,76 @@ GRAPH_MARGINS =
         left: 5
         down: 10
 
+
+createDrag = (yScale, information, lineGen) ->
+    main  = this
+    d3.behavior.drag()
+        .on "dragstart", (d) -> 
+            d3.event.sourceEvent.stopPropagation()
+            d3.select(this).classed("dragging", true)
+
+        .on "drag", (d) ->
+            DRAGGING = true
+            inv = yScale.invert d3.event.y
+            dot = d3.select(this)
+            inBounds = 0 <= inv <= 5
+            if inBounds
+                dot.attr 'cy', d3.event.y    
+                range = _.findWhere(information, { range: +dot.attr('range-index') })
+
+                range.prediction[dot.attr("index")] = 
+                    year: dot.attr("index")
+                    percentage: inv
+
+                main.lines[dot.attr('range-index')].line.attr 'd', lineGen(range.prediction)
+
+        .on "dragend", (d) ->
+            DRAGGING = false
+            d3.select(this).classed("dragging", false)
+            onMouseLeaveLineOrDot.call this, d, main.lines
+
+
+generateGraphAxises = (vis, xScale, yScale, height) ->
+    precisionFormat = d3.format(".1f")
+
+    xAxis = d3.svg.axis().scale(xScale).ticks(6).tickFormat (d) -> 
+        if d == 0 then "Nu" else "År #{d}"
+
+    yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(6)
+        .tickFormat (d) -> "#{precisionFormat d}%"
+
+    vis.append("svg:g")
+        .attr("transform", "translate(#{GRAPH_MARGINS.xaxis.right},#{height - (GRAPH_MARGINS.bottom - GRAPH_MARGINS.xaxis.down) })")
+        .call(xAxis)
+        .classed "axis", true
+
+    vis.append("svg:g")
+        .attr("transform", "translate(#{ GRAPH_MARGINS.left - GRAPH_MARGINS.yaxis.left}, #{GRAPH_MARGINS.yaxis.down})")
+        .call(yAxis)
+        .classed "axis", true
+
+
+onMouseoverLineOrDot = (d, lines) ->
+    console.log d3.select(this).attr('range-index')
+    if DRAGGING or INACTIVE[+d3.select(this).attr('range-indeẍ́')]
+        return false
+
+    for l in lines
+        if +l.line.attr('range-index') != +d3.select(this).attr('range-index')
+            l.line.attr 'opacity', 0.2
+            l.points.attr 'opacity', 0.2
+
+onMouseLeaveLineOrDot = (d, lines) ->
+    console.log d3.select(this).attr('range-index')
+    if DRAGGING or INACTIVE[+d3.select(this).attr('range-index')]
+        return false
+
+    for l in lines
+        if not INACTIVE[+l.line.attr('range-index')]
+            l.line.attr 'opacity', 1
+            l.points.attr 'opacity', 1
+
+
 $ ->
     $("#generate-result").click () ->
         generateResult randomResult()
@@ -30,88 +100,27 @@ $ ->
         information = data.information
 
         vis = d3.select('#graph-visualisation')
-        WIDTH = vis.attr("width")
-        HEIGHT = vis.attr("height") - 20
+        width = vis.attr("width")
+        height = vis.attr("height") - 20
 
+        xScale = d3.scale.linear()
+            .range([GRAPH_MARGINS.left, width - GRAPH_MARGINS.right]).domain([0,5])
 
-        precisionFormat = d3.format(".1f")
+        yScale = d3.scale.linear()
+            .range([height - GRAPH_MARGINS.top - GRAPH_MARGINS.bottom, GRAPH_MARGINS.bottom]).domain([0, 5])
 
-        xScale = d3.scale.linear().range([GRAPH_MARGINS.left, WIDTH - GRAPH_MARGINS.right]).domain([0,5])
-        yScale = d3.scale.linear().range([HEIGHT - GRAPH_MARGINS.top - GRAPH_MARGINS.bottom, GRAPH_MARGINS.bottom]).domain([0, 5])
-
-        xAxis = d3.svg.axis().scale(xScale).ticks(6).tickFormat (d) -> 
-            if d == 0 then "Nu" else "År #{d}"
-
-        yAxis = d3.svg.axis().scale(yScale).orient('left').ticks(6)
-            .tickFormat (d) -> "#{precisionFormat d}%"
-
-        width = WIDTH - (GRAPH_MARGINS.left + GRAPH_MARGINS.right)
-        height = HEIGHT - (GRAPH_MARGINS.top + GRAPH_MARGINS.bottom)
-
-        generateBackground vis, WIDTH, HEIGHT, "bars", GRAPH_MARGINS
-
-        vis.append("svg:g")
-            .attr("transform", "translate(#{GRAPH_MARGINS.xaxis.right},#{HEIGHT - (GRAPH_MARGINS.bottom - GRAPH_MARGINS.xaxis.down) })")
-            .call(xAxis)
-            .classed "axis", true
-
-        vis.append("svg:g")
-            .attr("transform", "translate(#{ GRAPH_MARGINS.left - GRAPH_MARGINS.yaxis.left}, #{GRAPH_MARGINS.yaxis.down})")
-            .call(yAxis)
-            .classed "axis", true
+        generateBackground vis, width, height, "bars", GRAPH_MARGINS
+        generateGraphAxises vis, xScale, yScale, height
 
         lineGen = d3.svg.line()
             .x (d) -> xScale(d.year)
             .y (d) -> yScale(d.percentage)
             .interpolate('cardinal')
 
-        drag = d3.behavior.drag()
-            .on "dragstart", (d) -> 
-                d3.event.sourceEvent.stopPropagation()
-                d3.select(this).classed("dragging", true)
+        this.lines = []
+        lines = this.lines
 
-            .on "drag", (d) ->
-                DRAGGING = true
-                inv = yScale.invert d3.event.y
-                dot = d3.select(this)
-                inBounds = 0 <= inv <= 5
-                if inBounds
-                    dot.attr 'cy', d3.event.y    
-                    range = _.findWhere(information, { range: +dot.attr('range-index') })
-
-                    range.prediction[dot.attr("index")] = 
-                        year: dot.attr("index")
-                        percentage: inv
-
-                    lines[dot.attr('range-index')].line.attr 'd', lineGen(range.prediction)
-
-            .on "dragend", (d) ->
-                DRAGGING = false
-                d3.select(this).classed("dragging", false)
-                onMouseLeaveLineOrDot.apply this, d
-
-        lines = []
-        colorCounter = 0
-
-        onMouseoverLineOrDot = (d) ->
-            if DRAGGING or INACTIVE[+d3.select(this).attr('range-indeẍ́')]
-                return false
-
-            for l in lines
-                if +l.line.attr('range-index') != +d3.select(this).attr('range-index')
-                    l.line.attr 'opacity', 0.2
-                    l.points.attr 'opacity', 0.2
-
-        onMouseLeaveLineOrDot = (d) ->
-            if DRAGGING or INACTIVE[+d3.select(this).attr('range-index')]
-                return false
-
-            for l in lines
-                if not INACTIVE[+l.line.attr('range-index')]
-                    l.line.attr 'opacity', 1
-                    l.points.attr 'opacity', 1
-
-
+        pointDrag = createDrag.call this, yScale, information, lineGen
 
         for range in information
 
@@ -120,8 +129,8 @@ $ ->
                 .attr 'range-index', range.range
                 .classed 'line', true
                 .attr 'stroke', LINECOLORS[range.range]
-                .on 'mouseover', onMouseoverLineOrDot
-                .on 'mouseleave', onMouseLeaveLineOrDot
+                .on 'mouseover', (d) -> onMouseoverLineOrDot.call this, d, lines
+                .on 'mouseleave', (d) -> onMouseLeaveLineOrDot.call this, d, lines
 
             points = vis.selectAll()
                 .data range.prediction
@@ -133,9 +142,9 @@ $ ->
                 .attr 'range-index', range.range
                 .attr "r", 8
                 .attr 'fill', LINECOLORS[range.range]
-                .call(drag)
-                .on 'mouseover', onMouseoverLineOrDot
-                .on 'mouseleave', onMouseLeaveLineOrDot
+                .call(pointDrag)
+                .on 'mouseover', (d) -> onMouseoverLineOrDot.call this, d, lines
+                .on 'mouseleave', (d) -> onMouseLeaveLineOrDot.call this, d, lines
 
             lines.push
                 line: line
