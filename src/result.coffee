@@ -12,7 +12,7 @@ RESULT_MARGINS =
         left: 10
         down: 10
 
-generateAxises = (vis, result, texts, width, height) ->
+generateResultAxises = (vis, result, texts, width, height) ->
         xScale = d3.scale.linear().domain([0,100]).range [RESULT_MARGINS.left, width - RESULT_MARGINS.right]
         yScale = d3.scale.linear().domain([0, result.length]).range [height - RESULT_MARGINS.top, RESULT_MARGINS.bottom]
 
@@ -32,6 +32,9 @@ generateAxises = (vis, result, texts, width, height) ->
         return xScale
 
 generateBackground = (vis, width, height, background, margins) ->
+    if not vis.selectAll('.graph-background').empty()
+        return
+    
     vis.append('svg:rect')
         .classed 'graph-background', true
         .attr "fill", "url(##{background})"
@@ -71,10 +74,9 @@ generateResult = (result) ->
 
     timeParserMany _.pluck(result, "range"), (err, texts) ->
 
-        xScale = generateAxises vis, result, texts, width, height
+        xScale = generateResultAxises vis, result, texts, width, height
 
-        if vis.selectAll('.graph-background').empty()
-            generateBackground vis, width, height, "bars-vertical", RESULT_MARGINS
+        generateBackground vis, width, height, "bars-vertical", RESULT_MARGINS
 
         generateChart vis, result, width, height, xScale
 

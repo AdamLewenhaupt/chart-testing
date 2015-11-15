@@ -146,31 +146,26 @@ createHeader = (information) ->
                     l.line.attr 'opacity', 1
                     l.points.attr 'opacity', 1
 
-
     texts = headerItems.append('p')
         .classed 'graph-header-text', true
 
     timeParserMany _.pluck(texts.data(), "range"), (err, result) ->
         texts.text (d) -> result[d.range]
 
-$ ->
-    $("#generate-result").click () ->
-        generateResult randomResult()
-
-
-    $.getJSON '/data.json', (data) ->
-
+setupGraph = (data) ->
         information = data.information
 
         vis = d3.select('#graph-visualisation')
         width = vis.attr("width")
         height = vis.attr("height") - 20
 
+
         xScale = d3.scale.linear()
             .range([GRAPH_MARGINS.left, width - GRAPH_MARGINS.right]).domain([0,5])
 
         yScale = d3.scale.linear()
             .range([height - GRAPH_MARGINS.top - GRAPH_MARGINS.bottom, GRAPH_MARGINS.bottom]).domain([0, 5])
+
 
         generateBackground vis, width, height, "bars", GRAPH_MARGINS
         generateGraphAxises vis, xScale, yScale, height
@@ -181,18 +176,36 @@ $ ->
             .interpolate('cardinal')
 
         this.lines = []
-        lines = this.lines
 
         pointDrag = createDrag.call this, yScale, information, lineGen
 
         for range in information
 
             line = createLine.call this, vis, lineGen, range
-            points = createPoints.call this, vis, xScale, yScale, range, pointDrag, lines
+            points = createPoints.call this, vis, xScale, yScale, range, pointDrag
 
-            lines.push
+            this.lines.push
                 line: line
                 points: points
 
-
         createHeader.call this, information
+
+
+resetGraph = (data) ->
+    vis = d3.select('#graph-visualisation')
+        
+    vis.selectAll('g').remove()
+    vis.selectAll('path').remove()
+    vis.selectAll('circle').remove()
+    d3.select(".graph-header").selectAll(".graph-header-item").remove()
+
+    setupGraph data
+
+$ ->
+    $("#generate-result").click () ->
+        generateResult randomResult()
+
+    $('#reset-graph').click () ->
+        $.getJSON '/data.json', resetGraph
+
+    $.getJSON '/data.json', setupGraph
