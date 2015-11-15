@@ -88,6 +88,7 @@ body {
     padding: 20px;
     padding-top: 0px;
     background-color: $normal;
+    width: 1000px;
 }
 
 .flat-btn {
@@ -120,4 +121,12 @@ body {
 .flat-btn.primary:hover {
     background-color: hsl(200, 60%, 60%);
     color: $normal;
+}
+
+.splash {
+    display: inline-block;
+
+    .save {
+        color: hsl(120, 50%, 50%);
+    }
 }

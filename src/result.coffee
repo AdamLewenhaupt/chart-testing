@@ -10,7 +10,7 @@ RESULT_MARGINS =
 
     yaxis:
         left: 10
-        down: 10
+        down: -20
 
 generateResultAxises = (vis, result, texts, width, height) ->
         xScale = d3.scale.linear().domain([0,100]).range [RESULT_MARGINS.left, width - RESULT_MARGINS.right]

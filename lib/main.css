@@ -65,7 +65,8 @@ body {
   display: inline-block;
   padding: 20px;
   padding-top: 0px;
-  background-color: #f2f2f2; }
+  background-color: #f2f2f2;
+  width: 1000px; }
 
 .flat-btn {
   display: inline-block;
@@ -91,5 +92,10 @@ body {
 .flat-btn.primary:hover {
   background-color: #5cadd6;
   color: #f2f2f2; }
+
+.splash {
+  display: inline-block; }
+  .splash .save {
+    color: #40bf40; }
 
 /*# sourceMappingURL=main.css.map */
