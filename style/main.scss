@@ -88,7 +88,6 @@ body {
     padding: 20px;
     padding-top: 0px;
     background-color: $normal;
-    width: 1000px;
 }
 
 .flat-btn {
@@ -129,4 +128,8 @@ body {
     .save {
         color: hsl(120, 50%, 50%);
     }
+}
+
+#result-visualisation {
+    display: inline-block;
 }

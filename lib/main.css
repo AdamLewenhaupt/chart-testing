@@ -65,8 +65,7 @@ body {
   display: inline-block;
   padding: 20px;
   padding-top: 0px;
-  background-color: #f2f2f2;
-  width: 1000px; }
+  background-color: #f2f2f2; }
 
 .flat-btn {
   display: inline-block;
@@ -97,5 +96,8 @@ body {
   display: inline-block; }
   .splash .save {
     color: #40bf40; }
+
+#result-visualisation {
+  display: inline-block; }
 
 /*# sourceMappingURL=main.css.map */
